@@ -18,3 +18,25 @@ def ecrire(ligne,contenu,fichier):
         file_content = ''.join(file_content)
     with open(fichier,'w') as file:
         file.write(file_content)
+
+def diviseurs_communs(nombre1, nombre2):
+    diviseurs1 = set()
+    for i in range(1, nombre1 + 1):
+        if nombre1 % i == 0:
+            diviseurs1.add(i)
+
+    diviseurs2 = set()
+    for i in range(1, nombre2 + 1):
+        if nombre2 % i == 0:
+            diviseurs2.add(i)
+
+    diviseurs_communs = list(diviseurs1.intersection(diviseurs2))
+    return diviseurs_communs
+
+def création_dico(dico,liste_clé):
+    new = dico.setdefault(liste_clé[0], {})
+    for i in liste_clé[1:]:
+        new = new.setdefault(i, {})
+    return dico
+
+

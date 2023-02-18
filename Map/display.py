@@ -1,32 +1,25 @@
-from Map.generation import MAP
+from Map.generation import *
 from Data.data_managment import *
 from Map.generation import *
 import time
 import pygame
 import colorama
 
-pygame.init()
 
-# obtenir la taille de la résolution de l'écran
-screen_info = pygame.display.Info()
-screen_width, screen_height = screen_info.current_w, screen_info.current_h
+
+
+screen_width, screen_height = info.current_w, info.current_h
 screen = pygame.display.set_mode((screen_width, screen_height))
+#Met du vert en fond
 screen.fill((99,199,77))
 
-#Affichage de la matrice (sert pas à grand chose)
-def affichage(pos, var=0):
-  time.sleep(var)
-  for element in MAP:
-    for element2 in element:
-      print(couleurs[element2] + str(element2), end="")
-    print('')
-  print(colorama.Fore.RESET)
 
 #A partir de la matrice, affichage de tous les élèments avec pygame
-def affichage_pygame(ecart,centrage=0):
+def affichage_pygame(var=0,centrage=0):
   """lance pygame et affiche la matrice. Option d'écart entre chaque point matricielle et de décallage pour centrer la matrice"""
-  for x in range(largeur):
-    for y in range(hauteur):
-      screen.blit(MAP[y][x],(x*ecart+centrage,y*ecart+centrage))
+  ecart = diviseur[parametre["ZOOM"]]
+  for key,value in statistique.items():
+    for key,value2 in value.items():
+      screen.blit(image[value2["image"]],(value2["position"][0]*ecart+centrage,value2["position"][1]*ecart+centrage))
   pygame.display.flip()
-
+  time.sleep(var)
