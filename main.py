@@ -18,13 +18,12 @@ if __name__ == "__main__":
                 running = False
             #if event.type == pygame.KEYDOWN:
                 #time.sleep(100)
-        affichage_pygame(0.1)
+        #mettre à jour l'affichage
+        affichage_pygame(10)
         # déplacer le personnage vers un emplacement aléatoire
         move_all()
         #move_all(player_image_red)
         test_case_occupe()
-        #mettre à jour l'affichage
-
 
     # quitter pygame
     pygame.quit()

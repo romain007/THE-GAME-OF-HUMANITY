@@ -88,25 +88,30 @@ for i in range(0,hauteur):
   loop=loop+1
 
 #Géneration de la nourriture à des endroits aléatoire
+liste = []
 for loop in range(parametre["NOMBRE NOURRITURE"]):
   hasard  = random.randint(1,largeur-2)
   hasard2 = random.randint(1,hauteur-2)
+  while [hasard,hasard2] in liste:
+    hasard  = random.randint(1,largeur-2)
+    hasard2 = random.randint(1,hauteur-2)
   statistique["nourriture"] = création_dico(statistique["nourriture"],[f"poulet_{loop}","position"])
-  statistique["nourriture"][f"poulet_{loop}"]["position"] = [hasard2,hasard]
+  statistique["nourriture"][f"poulet_{loop}"]["position"] = [hasard,hasard2]
   statistique["nourriture"][f"poulet_{loop}"]["image"] = "food_image"
+  liste.append([hasard,hasard2])
 
 #Génération des persos bleus
 for loop in range(parametre["NOMBRE PERSO BLUE"]):
   #Pour un suivis de chaque personnage, ils ont chacun un identifiant unique
   statistique["perso_blue"] = création_dico(statistique["perso_blue"],[f"perso_blue{loop}","position"])
-  statistique["perso_blue"][f"perso_blue{loop}"]["position"] = [random.randint(1,(hauteur-2)),random.randint(1,(largeur-2))]
+  statistique["perso_blue"][f"perso_blue{loop}"]["position"] = [random.randint(1,(largeur-2)),random.randint(1,(hauteur-2))]
   statistique["perso_blue"][f"perso_blue{loop}"]["image"] = "player_image_blue"
 
 #Génération des persos rouge
 for loop in range(parametre["NOMBRE PERSO RED"]):
   #Pour un suivis de chaque personnage, ils ont chacun un identifiant unique
   statistique["perso_red"] = création_dico(statistique["perso_red"],[f"perso_red{loop}","position"])
-  statistique["perso_red"][f"perso_red{loop}"]["position"] = [random.randint(1,(hauteur-2)),random.randint(1,(largeur-2))]
+  statistique["perso_red"][f"perso_red{loop}"]["position"] = [random.randint(1,(largeur-2)),random.randint(1,(hauteur-2))]
   statistique["perso_red"][f"perso_red{loop}"]["image"] = "player_image_blue"
 
 with open(r"Environment/statistique.json","w") as f:
