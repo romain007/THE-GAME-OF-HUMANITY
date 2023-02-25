@@ -1,4 +1,3 @@
-import colorama
 import random
 from Data.data_managment import *
 import pygame
@@ -10,17 +9,14 @@ with open ("parametre.json","r",encoding="utf-8") as json_file:
   parametre = json.load(json_file)
 
 
-statistique = {
-"herbe":{},
-"rock":{},
-"perso_red":{},
-"perso_blue":{},
-"nourriture":{}
-}
+statistique = {}
   
 # Récupérer les informations de l'écran
 pygame.init()
 info = pygame.display.Info()
+
+background_surface = pygame.Surface((info.current_w,info.current_h))
+background_surface.fill((99,199,77))
 
 #Fait en sorte que tous s'adapte parfaitement à la taille de l'écran
 diviseur = sorted(diviseurs_communs(info.current_w,info.current_h))
@@ -31,88 +27,78 @@ print("ZOOM DE :",diviseur[parametre["ZOOM"]])
 #load toutes les images avec les tailles voulues
 size_largeur = diviseur[parametre["ZOOM"]]
 size_hauteur = diviseur[parametre["ZOOM"]]
+ecart = diviseur[parametre["ZOOM"]]
 
-grass_image = pygame.image.load("sprite/grass.png")
-
-player_image_blue = pygame.image.load("sprite/player.png")
-
-player_image_red = pygame.image.load("sprite/player-red.png")
-
-rock_image = pygame.image.load(r"sprite/rock.png")
-
-food_image = pygame.image.load(r"sprite/food.png")
-
-image={"grass_image":pygame.transform.scale(grass_image, (size_largeur,size_hauteur)),
-"player_image_blue":pygame.transform.scale(player_image_blue, (size_largeur,size_hauteur)),
-"player_image_red":pygame.transform.scale(player_image_red, (size_largeur,size_hauteur)),
-"rock_image" : pygame.transform.scale(rock_image, (size_largeur,size_hauteur)),
-"food_image" : pygame.transform.scale(food_image, (size_largeur,size_hauteur))
+image ={
+  "grass":pygame.transform.scale(pygame.image.load("sprite/grass.png"),(size_largeur,size_hauteur)),
+  "player_blue":pygame.transform.scale(pygame.image.load("sprite/player.png"),(size_largeur,size_hauteur)),
+  "player_red":pygame.transform.scale(pygame.image.load("sprite/player-red.png"),(size_largeur,size_hauteur)),
+  "rock":pygame.transform.scale(pygame.image.load("sprite/rock.png"),(size_largeur,size_hauteur)),
+  "food":pygame.transform.scale(pygame.image.load("sprite/food.png"),(size_largeur,size_hauteur))
 }
 
-print(largeur,hauteur)
+print(largeur*hauteur)
 #Géneration de la matrice ainsi que tous ces élèments :
 #Génération map vide
 loop=0
 for x in range(largeur):
   for y in range(hauteur):
-    statistique["herbe"] = création_dico(statistique["herbe"],[f"herbe_{loop}","position"])
-    statistique["herbe"][f"herbe_{loop}"]["position"] = [x,y]
-    statistique["herbe"][f"herbe_{loop}"]["image"] = "grass_image"
+    statistique[(x,y)] = {"objet":"grass","IDENTIFIANT":f"grass{loop}"}
+    background_surface.blit(image["grass"],(x*ecart,y*ecart))
     loop=loop+1
 
-#Géneration de la limite
-#PARTIE HAUTE
-loop=0
-for i in range(0,largeur):
-  statistique["rock"] = création_dico(statistique["rock"],[f"rock_{loop}","position"])
-  statistique["rock"][f"rock_{loop}"]["position"] = [i,0] 
-  statistique["rock"][f"rock_{loop}"]["image"] = "rock_image"
-  loop=loop+1
-#PARTIE BASSE
-for i in range(0,largeur):
-  statistique["rock"] = création_dico(statistique["rock"],[f"rock_{loop}","position"])
-  statistique["rock"][f"rock_{loop}"]["position"] = [i,hauteur-1]
-  statistique["rock"][f"rock_{loop}"]["image"] = "rock_image"
-  loop=loop+1
-#PARTIE DROITE
-for i in range(0,hauteur):
-  statistique["rock"] = création_dico(statistique["rock"],[f"rock_{loop}","position"])
-  statistique["rock"][f"rock_{loop}"]["position"] = [largeur-1,i]
-  statistique["rock"][f"rock_{loop}"]["image"] = "rock_image"
-  loop=loop+1
-#PARTIE GAUCHE
-for i in range(0,hauteur):
-  statistique["rock"] = création_dico(statistique["rock"],[f"rock_{loop}","position"])
-  statistique["rock"][f"rock_{loop}"]["position"] = [0,i]
-  statistique["rock"][f"rock_{loop}"]["image"] = "rock_image"
-  loop=loop+1
+loop = 0
+for i in range(largeur):
+    for j in range(hauteur):
+        if i == 0 or j == 0 or i == largeur-1 or j == hauteur-1:
+            statistique[(i, j)]["objet"] = "rock"
+            statistique[(i, j)]["IDENTIFIANT"] = f"rock{loop}"
+            background_surface.blit(image["rock"],(i*ecart,j*ecart))
+            loop = loop+1
+
 
 #Géneration de la nourriture à des endroits aléatoire
-liste = []
-for loop in range(parametre["NOMBRE NOURRITURE"]):
-  hasard  = random.randint(1,largeur-2)
-  hasard2 = random.randint(1,hauteur-2)
-  while [hasard,hasard2] in liste:
-    hasard  = random.randint(1,largeur-2)
-    hasard2 = random.randint(1,hauteur-2)
-  statistique["nourriture"] = création_dico(statistique["nourriture"],[f"poulet_{loop}","position"])
-  statistique["nourriture"][f"poulet_{loop}"]["position"] = [hasard,hasard2]
-  statistique["nourriture"][f"poulet_{loop}"]["image"] = "food_image"
-  liste.append([hasard,hasard2])
+loop=0
+while loop < parametre["NOMBRE NOURRITURE"]:
+  hasard  = random.randint(0,largeur-1)
+  hasard2 = random.randint(0,hauteur-1)
+  if statistique[(hasard,hasard2)]["objet"] == "grass" :
+    statistique[(hasard,hasard2)]["objet"] = "food"
+    statistique[(hasard,hasard2)]["IDENTIFIANT"] = f"food{loop}"
+    statistique[(hasard,hasard2)]["SPEED"] = 50
+    loop=loop+1
 
 #Génération des persos bleus
-for loop in range(parametre["NOMBRE PERSO BLUE"]):
+loop=0
+while loop < parametre["NOMBRE PERSO BLUE"]:
   #Pour un suivis de chaque personnage, ils ont chacun un identifiant unique
-  statistique["perso_blue"] = création_dico(statistique["perso_blue"],[f"perso_blue{loop}","position"])
-  statistique["perso_blue"][f"perso_blue{loop}"]["position"] = [random.randint(1,(largeur-2)),random.randint(1,(hauteur-2))]
-  statistique["perso_blue"][f"perso_blue{loop}"]["image"] = "player_image_blue"
+  hasard  = random.randint(0,largeur-1)
+  hasard2 = random.randint(0,hauteur-1)
+  if statistique[(hasard,hasard2)]["objet"] == "grass":
+    statistique[(hasard,hasard2)]["objet"] = "player_blue"
+    statistique[(hasard,hasard2)]["FOOD"] = 0
+    statistique[(hasard,hasard2)]["SPEED"] = random.randint(90,100)
+    statistique[(hasard,hasard2)]["AGILITY"] = random.randint(0,100)
+    statistique[(hasard,hasard2)]["POWER"] = random.randint(0,100)
+    statistique[(hasard,hasard2)]["SMART"] = 0
+    statistique[(hasard,hasard2)]["IDENTIFIANT"] = f"player_blue{loop}"
+    loop=loop+1
 
-#Génération des persos rouge
-for loop in range(parametre["NOMBRE PERSO RED"]):
+#Génération des persos rouges
+loop=0
+while loop < parametre["NOMBRE PERSO RED"]:
   #Pour un suivis de chaque personnage, ils ont chacun un identifiant unique
-  statistique["perso_red"] = création_dico(statistique["perso_red"],[f"perso_red{loop}","position"])
-  statistique["perso_red"][f"perso_red{loop}"]["position"] = [random.randint(1,(largeur-2)),random.randint(1,(hauteur-2))]
-  statistique["perso_red"][f"perso_red{loop}"]["image"] = "player_image_blue"
+  hasard  = random.randint(0,largeur-1)
+  hasard2 = random.randint(0,hauteur-1)
+  if statistique[(hasard,hasard2)]["objet"] == "grass":
+    statistique[(hasard,hasard2)]["objet"] = "player_red"
+    statistique[(hasard,hasard2)]["FOOD"] = 0
+    statistique[(hasard,hasard2)]["SPEED"] = random.randint(90,100)
+    statistique[(hasard,hasard2)]["AGILITY"] = random.randint(0,100)
+    statistique[(hasard,hasard2)]["POWER"] = random.randint(0,100)
+    statistique[(hasard,hasard2)]["SMART"] = 0
+    statistique[(hasard,hasard2)]["IDENTIFIANT"] = f"player_red{loop}"
+    loop=loop+1
 
-with open(r"Environment/statistique.json","w") as f:
-  json.dump(statistique,f,indent=6)
+
+save = statistique.copy()  

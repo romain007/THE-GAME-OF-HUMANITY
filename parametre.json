@@ -5,10 +5,11 @@
         "Y":6
     },  
     
-    "NOMBRE NOURRITURE":95,
+    "NOMBRE NOURRITURE":0,
     "ZOOM":15,
-    "NOMBRE PERSO RED":0,
-    "NOMBRE PERSO BLUE":1
+    "NOMBRE PERSO RED":15,
+    "NOMBRE PERSO BLUE":15,
+    "FPS":10
 }
 
 
