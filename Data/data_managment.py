@@ -1,3 +1,4 @@
+import random
 #Sert à récupérer des donnés dans un fichier ou à y écrire, tous ceux qui est data
 
 def lire(ligne,fichier):
@@ -39,4 +40,17 @@ def création_dico(dico,liste_clé):
         new = new.setdefault(i, {})
     return dico
 
+def melange_dico(dictionnaire):
+    cles = list(dictionnaire.keys())
+    valeurs = list(dictionnaire.values())
+
+    random.shuffle(cles)
+    random.shuffle(valeurs)
+
+    dictionnaire_melange = {}
+
+    for i in range(len(cles)):
+        dictionnaire_melange[cles[i]] = valeurs[i]
+
+    return dictionnaire_melange
 

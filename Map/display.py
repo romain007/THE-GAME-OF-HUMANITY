@@ -1,59 +1,36 @@
 from Map.generation import *
 from Data.data_managment import *
-from Map.generation import *
 import time
 import pygame
-screen_width, screen_height = info.current_w, info.current_h
-screen = pygame.display.set_mode((screen_width, screen_height))
+import sys
 
 
-def signe(a,b):
-  if a<b:
-    return -1
-  if a>b:
-    return 1
-  else:
-    return 0
-    
-#A partir de la matrice, affichage de tous les élèments avec pygame
-def affichage(var=0):
-  """lance pygame et affiche la matrice. Option d'écart entre chaque point matricielle et de décallage pour centrer la matrice"""
-  global save
+screen = pygame.display.set_mode((info_w, info_h))
 
-  ecart = diviseur[parametre["ZOOM"]]
-  param=["food","player_red","player_blue"]
+def affichage(dico,temps=0):
 
-
-  historique={}
-  
-  for position in save:
-      if save[position]["objet"] in param:
-        old_position = position[0]*ecart,position[1]*ecart
-        try:
-          new_position = [(key[0]*ecart,key[1]*ecart) for key, value in statistique.items() if value['IDENTIFIANT'] == save[position]['IDENTIFIANT']][0]
-        except:
-          old_position = position[0]*ecart,position[1]*ecart
-          new_position = old_position
-        coordonnée = old_position
-        historique[position] = []
-        for loop in range(ecart):
-
-          #Nouvelle coordonnée, entre old et new position
-          coordonnée = (coordonnée[0]+1*signe(new_position[0],old_position[0]),coordonnée[1]+1*signe(new_position[1],old_position[1]))
-                  
-          historique[position].append(coordonnée)
-
-  for loop in range(len(list(historique.values())[0])):
     screen.blit(background_surface, (0, 0))
-    for key in historique:          
+    for loop in range(FPS+1):   
+        screen.blit(background_surface, (0, 0))
+        for position in dico:
+            screen.blit(image[position[1]],dico[position][loop])
+            '''for i in mort:
+                for key,value in i.items():
+                    screen.blit(image[value],(key[0]*ecart,key[1]*ecart))'''
+        time.sleep(temps)
+        pygame.display.flip()
 
-      screen.blit(image[save[key]["objet"]],historique[key][loop])
+def val_inter(old_position,new_pos):
 
-    pygame.display.flip()
-    time.sleep(var)
+    #Définition des vecteurs initiaux et finaux. Les transforme en point a taille réel
+    old_vector = pygame.math.Vector2(old_position[0]*ecart,old_position[1]*ecart)
+    new_vector = pygame.math.Vector2(new_pos[0]*ecart,new_pos[1]*ecart)
+    #Prend tous les coordonnés intermédiaire entre les 2 positions
+    dico[str(old_position),statistique[old_position]["objet"]] = []
 
-  save=statistique.copy()
-
-  
-
-
+    #Remplissage d'un dictionnaire avec toute les valeurs intermédiaire
+    i=0
+    for loop in range(FPS+1):
+        intermediate_vector = old_vector.lerp(new_vector, i/100)
+        dico[str(old_position),statistique[old_position]["objet"]].append(intermediate_vector)
+        i=i+100/FPS

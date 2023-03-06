@@ -1,107 +1,62 @@
 from Map.generation import *
+from Map.display import *
+from Environment.case_occupe import *
 import random
-
-#FICHIER POUR LE DEPLACEMENT DU PERSONNAGE
-vect = [[0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [-1, -1], [-1, 1], [1, -1]] #liste toute les directions possibles
-
-def next_to(position):
-    """renvoie la liste des 8 cases autour de la case d'entrée.Parametre : la liste des objet a exlure"""
-    liste_objet={}
-    for vector in vect:
-        new_pos = (position[0] + vector[0],position[1] - vector[1])
-        liste_objet[new_pos] = statistique[new_pos]
-
-    return liste_objet
-
-def move_all(caractère,attrap1="False",attrap2="False",param=[]):
-  """Bouge tous les personnage Le vector est sous la forme [x,y](exemple pour aller a droite c'est [1,0])"""
-
-  identifiant = []
-
-  for position in statistique:
-    if statistique[position]["objet"] == caractère and statistique[position]["IDENTIFIANT"] not in identifiant :
-        #Aléatoire pour vitesse, agilité, ect
-        
-        
-        #identifiant différentie chaque perso
-        identifiant.append(statistique[position]["IDENTIFIANT"])
-        cases = next_to(position)
-
-        #Si il y a le premier objet qu'on veut attraper:
-        for pos in cases:
-          if cases[pos]["objet"] == attrap1:
-
-            #Garde que les objets
-            for pos in cases.copy():
-              if cases[pos]["objet"] != attrap1:
-                del cases[pos]
-            break
-
-        #Si il y a le deuxieme objet qu'on veut attraper:
-        for pos in cases:
-          if cases[pos]["objet"] == attrap2:
-
-            #Garde que les objets
-            for pos in cases.copy():
-              if cases[pos]["objet"] != attrap2:
-                del cases[pos]
-            break
-
-        #Garde que les cases sans les objets voulues
-        for pos in cases.copy():
-          if cases[pos]["objet"] in param:
-            del cases[pos]
-        #SPEEDWAGON
-        rand_num = random.randint(0,100)
-        if rand_num>statistique[position]["SPEED"]:
-          cases={}
-        #Dans le cas ou le perso peut pas bouger
-        if cases == {}:
-          cases={position:statistique[position]}
-
-        hasard = random.choice(list(cases.items()))
-
-        #Fais plus 1 a la variable du perso si mange poulet
-        if hasard[1]["objet"] == "food" and ( statistique[position]["objet"] == "player_blue" or statistique[position]["objet"] == "player_red") :
-          rand_num = random.randint(0,100)
-          if rand_num<=statistique[position]["AGILITY"] :
-            statistique[position]["FOOD"] = statistique[position]["FOOD"]+1
-          else:
-            fuite_pouleto(hasard[1]["IDENTIFIANT"],["food","player_blue","player_red","rock"])
-        
-        #Se bat si autre perso
-        if ( hasard[1]["objet"] == "player_red"or hasard[1]["objet"] == "player_blue") and ( statistique[position]["objet"] == "player_blue" or statistique[position]["objet"] == "player_red") :
-          rand_num = random.randint(0,100)
-          if rand_num>statistique[position]["POWER"] :
-            print(statistique[position]["POWER"])
-            hasard = (position,"CLAIRE")
-
-        print(hasard[0])
-        new_position = hasard[0]
-
-        
-        #Met à jour position 
-        statistique[new_position] = statistique[position]
-        if position != new_position:
-          #Met à jour l'ancienne position
-          statistique[position] = {"objet":"grass","IDENTIFIANT":random.randint(0,10000000)}
-
-      
-
-def fuite_pouleto(id,param=[]):
-  for position in statistique:
-
-    if statistique[position]["objet"] == "food" and statistique[position]["IDENTIFIANT"] == id:
-
-      cases = next_to(position)
-      #Garde que les cases sans les objets voulues
-      for pos in cases.copy():
-        if cases[pos]["objet"] in param:
-          del cases[pos]
-      if cases == {}:
-        cases={position:'prout'}
-      new_position = random.choice(list(cases.keys()))
-      statistique[new_position] = statistique[position]
-      break
+import time
 
 
+
+def fuite_pouleto(identifiant):
+    old_position = [key for key, value in statistique.items() if value['IDENTIFIANT'] == identifiant][0]
+    new_pos = random.choice(next_to(old_position,attaque='False',param=["player_blue","player_red","food","rock"]))
+    val_inter(old_position,new_pos)
+    statistique[new_pos] = statistique[old_position]
+    statistique[old_position] = {"objet":"grass","IDENTIFIANT":"grass1234"}
+    return  statistique[new_pos]["IDENTIFIANT"]
+
+def init_pos():
+    for position in statistique:
+        if statistique[position]["objet"] == "player_blue" or statistique[position]["objet"] == "player_red" or statistique[position]["objet"] == "food" :
+            statistique[position]["MOVE"] = False
+
+def move_perso(identifiant,attaque='False',param=[]):
+
+    mort = []
+    ident = False
+    #Position actuelle de l'identifiant du perso
+
+    old_position = [key for key, value in statistique.items() if value['IDENTIFIANT'] == identifiant][0]
+
+
+    #Choisis une case au hasard
+    new_pos = random.choice(next_to(old_position,attaque,param=param))
+
+    #SPEED
+    rand_num = random.randint(0,100)
+    #Si ça variable speed est trop faible il bouge pas
+    if statistique[old_position]["SPEED"] < rand_num and statistique[new_pos]["objet"] not in ["player_red","player_blue","food"]:
+        new_pos = old_position
+    
+    #AGILITY
+    rand_num = random.randint(0,100)
+    #Si ça variable agility est trop faible il attrape pas le pouleto
+    if statistique[old_position]["AGILITY"] < rand_num and statistique[new_pos]["objet"] == "food" and statistique[old_position]["objet"] in ["player_red","player_blue"]:
+        ident = fuite_pouleto(statistique[new_pos]["IDENTIFIANT"])
+    
+    #AGILITY
+    rand_num = random.randint(0,100)
+    #Si ça variable trop faible il tue pas l'autre
+    if statistique[old_position]["POWER"] < rand_num and statistique[new_pos]["objet"] == attaque and statistique[old_position]["objet"] in ["player_red","player_blue"]:
+        new_pos = old_position
+
+    val_inter(old_position,new_pos)
+
+    if statistique[new_pos]["objet"] == attaque or statistique[new_pos]["objet"] == "food": #and statistique[new_pos]["MOVE"] == False:
+        ident = statistique[new_pos]["IDENTIFIANT"]
+
+    #Mise a jour des coordonées
+    statistique[new_pos] = statistique[old_position].copy()
+    if new_pos != old_position:
+        statistique[old_position] = {"objet":"grass","IDENTIFIANT":"grass123"}
+
+    return dico , ident

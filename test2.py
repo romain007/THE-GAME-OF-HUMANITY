@@ -1,3 +1,14 @@
+from Map.generation import *
+from Data.data_managment import *
+from Map.generation import *
+import time
+import pygame
+import sys
+
+screen_width, screen_height = info.current_w, info.current_h
+screen = pygame.display.set_mode((screen_width, screen_height))
+
+
 def signe(a,b):
   if a<b:
     return -1
@@ -10,41 +21,48 @@ def signe(a,b):
 def affichage(var=0):
   """lance pygame et affiche la matrice. Option d'écart entre chaque point matricielle et de décallage pour centrer la matrice"""
   global save
-
-  screen.fill((99,199,77))
-  ecart = diviseur[parametre["ZOOM"]]
-  param=["food","player_red","player_blue"]
-  historique=[]
-
-
-  for loop in range(ecart):
-    for position in save:
-
-
-        if save[position]["objet"] in param:
-          
-
-          new_position = [key for key, value in statistique.items() if value['IDENTIFIANT'] == save[position]['IDENTIFIANT']][0]
-          print("POSITION INITIALE :",position,"POSITION FINALE :",new_position)
-          
-          coordonnée = (position[0]*ecart,position[1]*ecart)
-
-
-          historique.append((coordonnée[0]+1*signe(position[0],new_position[0]),coordonnée[1]+1*signe(position[1],new_position[1])))
-
-  for i in historique:          
-  #historique.append((new_position[0]*ecart+1,new_position[1]*ecart+1))
-    screen.blit(image[save[position]["objet"]],i)
-
-  pygame.display.update()
-  time.sleep(0.1)
-  time.sleep(var)
-
-        
   
+  ecart = diviseur[parametre["ZOOM"]]
+  FPS = parametre["FPS"]
 
+  historique={"food":{},"player_red":{},"player_blue":{}}
+  
+  for position in save:
 
+      if save[position]["objet"] in historique:
+        
+        #OLD POSITION
+        old_position = pygame.math.Vector2(position[0]*ecart,position[1]*ecart)
+
+        #Teste si l'objet existe encore en le recherchant via son identifiant
+        try:
+          new = [(key[0]*ecart,key[1]*ecart) for key, value in statistique.items() if value['IDENTIFIANT'] == save[position]['IDENTIFIANT']][0]
+        except:
+          #old_position = pygame.math.Vector2(position[0]*ecart,position[1]*ecart)
+          new = old_position
+
+        #NEW POSITION
+        new_position = pygame.math.Vector2(new[0],new[1])
+
+        #Initialise historique
+        historique[save[position]["objet"]][save[position]["IDENTIFIANT"]] = []
+        
+        i=0
+        for loop in range(FPS):
+          intermediate_pos = old_position.lerp(new_position, i/100)
+          historique[save[position]["objet"]][save[position]["IDENTIFIANT"]].append(intermediate_pos)
+          i=i+100/FPS
+          
+  screen.blit(background_surface, (0, 0))
+
+  for loop in range(FPS):   
+    
+    for key in historique:
+      for player in historique[key]:
+        screen.blit(image[key],historique[key][player][loop])
+
+    pygame.display.flip()
+    time.sleep(var)
 
   save=statistique.copy()
-
-  time.sleep(var)
+  

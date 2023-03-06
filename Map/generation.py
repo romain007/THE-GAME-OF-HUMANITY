@@ -7,21 +7,22 @@ import json
 #Récupére les paramètres
 with open ("parametre.json","r",encoding="utf-8") as json_file:
   parametre = json.load(json_file)
-
+FPS = parametre["FPS"]
 
 statistique = {}
-  
+dico = {}
 # Récupérer les informations de l'écran
 pygame.init()
 info = pygame.display.Info()
-
-background_surface = pygame.Surface((info.current_w,info.current_h))
+info_w = info.current_w
+info_h = info.current_h
+background_surface = pygame.Surface((info_w,info_h))
 background_surface.fill((99,199,77))
 
 #Fait en sorte que tous s'adapte parfaitement à la taille de l'écran
-diviseur = sorted(diviseurs_communs(info.current_w,info.current_h))
-largeur = info.current_w//diviseur[parametre["ZOOM"]]
-hauteur = info.current_h//diviseur[parametre["ZOOM"]]
+diviseur = sorted(diviseurs_communs(info_w,info_h))
+largeur = info_w//diviseur[parametre["ZOOM"]]
+hauteur = info_h//diviseur[parametre["ZOOM"]]
 print("ZOOM DE :",diviseur[parametre["ZOOM"]])
 
 #load toutes les images avec les tailles voulues
@@ -66,6 +67,9 @@ while loop < parametre["NOMBRE NOURRITURE"]:
     statistique[(hasard,hasard2)]["objet"] = "food"
     statistique[(hasard,hasard2)]["IDENTIFIANT"] = f"food{loop}"
     statistique[(hasard,hasard2)]["SPEED"] = 50
+    statistique[(hasard,hasard2)]["AGILITY"] = 0
+    statistique[(hasard,hasard2)]["VECTOR"] = 0
+    statistique[(hasard,hasard2)]["MOVE"] = False
     loop=loop+1
 
 #Génération des persos bleus
@@ -77,11 +81,12 @@ while loop < parametre["NOMBRE PERSO BLUE"]:
   if statistique[(hasard,hasard2)]["objet"] == "grass":
     statistique[(hasard,hasard2)]["objet"] = "player_blue"
     statistique[(hasard,hasard2)]["FOOD"] = 0
-    statistique[(hasard,hasard2)]["SPEED"] = random.randint(90,100)
-    statistique[(hasard,hasard2)]["AGILITY"] = random.randint(0,100)
-    statistique[(hasard,hasard2)]["POWER"] = random.randint(0,100)
+    statistique[(hasard,hasard2)]["SPEED"] = random.randint(0,100)
+    statistique[(hasard,hasard2)]["AGILITY"] = 0
+    statistique[(hasard,hasard2)]["POWER"] = 100
     statistique[(hasard,hasard2)]["SMART"] = 0
     statistique[(hasard,hasard2)]["IDENTIFIANT"] = f"player_blue{loop}"
+    statistique[(hasard,hasard2)]["MOVE"] = False
     loop=loop+1
 
 #Génération des persos rouges
@@ -93,12 +98,11 @@ while loop < parametre["NOMBRE PERSO RED"]:
   if statistique[(hasard,hasard2)]["objet"] == "grass":
     statistique[(hasard,hasard2)]["objet"] = "player_red"
     statistique[(hasard,hasard2)]["FOOD"] = 0
-    statistique[(hasard,hasard2)]["SPEED"] = random.randint(90,100)
-    statistique[(hasard,hasard2)]["AGILITY"] = random.randint(0,100)
+    statistique[(hasard,hasard2)]["SPEED"] = random.randint(0,100)
+    statistique[(hasard,hasard2)]["AGILITY"] = 0
     statistique[(hasard,hasard2)]["POWER"] = random.randint(0,100)
     statistique[(hasard,hasard2)]["SMART"] = 0
     statistique[(hasard,hasard2)]["IDENTIFIANT"] = f"player_red{loop}"
+    statistique[(hasard,hasard2)]["MOVE"] = False
     loop=loop+1
 
-
-save = statistique.copy()  

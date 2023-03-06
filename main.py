@@ -4,9 +4,15 @@ from Data.data_managment import *
 from Environment.case_occupe import *
 import pygame
 import sys
-clock = pygame.time.Clock()
-
-FPS = diviseur[parametre["FPS"]]
+FPS = parametre["FPS"]
+rules ={
+        "player_red":
+            {"attaque":"player_blue","param":["rock","player_red"]},
+        "player_blue":
+            {"attaque":"player_red","param":["rock","player_blue"]},
+        "food":
+            {"attaque":"False","param":["rock","player_red","player_blue","food"]}
+       }
 
 if __name__ == "__main__":
 
@@ -16,40 +22,28 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            #if event.type == pygame.KEYDOWN:
-                #time.sleep(100)
-        
 
+        liste_id = {}
+        #Liste de tous les players
+        for position in statistique:
+            if statistique[position]["objet"] in ["player_blue","player_red","food"] :
+                liste_id[statistique[position]["IDENTIFIANT"]] = statistique[position]["objet"]
+        dead = []
+        historique = {}
+        liste_id = melange_dico(liste_id)
+        NO = []
 
+        for identifiant,objet in liste_id.items():
+            if identifiant in NO:
+                continue
+            h , i = move_perso(identifiant,rules[objet]["attaque"],rules[objet]["param"])
+            historique.update(h)
+            if i:
+                NO.append(i)
 
-        VAR = random.randint(0,1)
-        # déplacer le personnage vers un emplacement aléatoire
-        if VAR == 1:
-            move_all("player_blue",attrap1="player_red",attrap2="food",param=["rock","player_blue"])
-            move_all("player_red",attrap1="player_blue",attrap2="food",param=["rock","player_red"])
-        if VAR == 0:
-            move_all("player_red",attrap1="player_blue",attrap2="food",param=["rock","player_red"])
-            move_all("player_blue",attrap1="player_red",attrap2="food",param=["rock","player_blue"])
-        move_all("food",param=["player_red","rock","player_blue","food"])
-        
-        #mettre à jour l'affichage
-        affichage(0.009)
-        clock.tick(FPS)
-
-
+        affichage(historique,temps=0.1)
+        for i in dico.copy():
+            del dico[i]
     # quitter pygame
     pygame.quit()
     sys.exit()
-
-
-
-
-
-
-
-
-
-
-
-
-

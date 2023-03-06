@@ -6,9 +6,9 @@
     },  
     
     "NOMBRE NOURRITURE":0,
-    "ZOOM":15,
-    "NOMBRE PERSO RED":15,
-    "NOMBRE PERSO BLUE":15,
+    "ZOOM":14,
+    "NOMBRE PERSO RED":40,
+    "NOMBRE PERSO BLUE":40,
     "FPS":10
 }
 
