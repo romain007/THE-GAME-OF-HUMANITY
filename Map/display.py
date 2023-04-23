@@ -57,11 +57,13 @@ def affichage(mort,temps=0,gamma=0.5,c=0):
 
         for position in map:
             if map[position]["objet"] in ["player_blue","player_red","food"]:
-
-                screen.blit(image[en_fonction_var(map[position])],map[position]["MOVE"][loop])  #Perso
-                if map[position]["objet"] not in ["food"]:
-                    text_surface = font.render(f"{map[position]['ENERGY']}/100", True, (255 , 255 ,255))
-                    screen.blit(text_surface, (map[position]["MOVE"][loop][0],map[position]["MOVE"][loop][1]-26))  #Barre de vie
+                try:
+                    screen.blit(image[en_fonction_var(map[position])],map[position]["MOVE"][loop])  #Perso
+                    if map[position]["objet"] not in ["food"]:
+                        text_surface = font.render(f"{map[position]['ENERGY']}/100", True, (255 , 255 ,255))
+                        screen.blit(text_surface, (map[position]["MOVE"][loop][0],map[position]["MOVE"][loop][1]-26))  #Barre de vie
+                except:
+                    pass
 
 
         screen.blit(rect_surface, (largeur,hauteur))

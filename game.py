@@ -8,7 +8,7 @@ from Map.statistique import *
 
 
 FPS = parametre["FPS"]
-TIME = parametre["TIME"]
+TIME = parametre["TIME"]/10
 
 
 
@@ -48,8 +48,7 @@ def game():
 
             #Mise à jour de l'affichage
             if tour >= parametre["DAY"]/2:
-                pass
-                #gamma_ = gamma_ - 1/parametre["DAY"]
+                gamma_ = gamma_ - 1/parametre["DAY"]
 
             liste_mort = liste_mort + energy_compteur() #Supprime les persos qui n'ont plus assez d'energie
 
@@ -94,5 +93,4 @@ def game():
     affiche_log()
     time.sleep(100)
     return
-
 
