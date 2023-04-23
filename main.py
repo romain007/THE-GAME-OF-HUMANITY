@@ -1,9 +1,7 @@
 import pygame
 import pygame_menu
 import json
-import sys
 from game import *
-
 # Initialisation de Pygame :
 
 pygame.init()
@@ -29,7 +27,6 @@ options_menu_theme = pygame_menu.Theme(background_color=(254, 231, 97), widget_f
 # Fonction de démarrage du jeu :
 
 def start_game():
-
     game()  #FONCTION LANCE LE JEU
 
 def on_text_entered(text_input):
@@ -58,7 +55,6 @@ def show_options():
 
 def quit_game():
     pygame.quit()
-    sys.exit()
 
 
 # Création de la fenêtre Pygame :

@@ -53,7 +53,7 @@ def game():
 
             liste_mort = liste_mort + energy_compteur() #Supprime les persos qui n'ont plus assez d'energie
 
-            affichage(mort = liste_mort,temps=TIME,gamma=gamma_)
+            affichage(mort = liste_mort,temps=TIME,gamma=gamma_,c=c)
 
             '''with open("map.txt","w",encoding="utf-8") as f:
                 for i,value in map.items():
@@ -71,7 +71,7 @@ def game():
                 
                 return_home(identifiant)
             
-            affichage(mort=[],temps=TIME,gamma=gamma_)
+            affichage(mort=[],temps=TIME,gamma=gamma_,c=c)
 
 
             #Finit la boucle si tout le monde est rentré chez soi
@@ -85,7 +85,7 @@ def game():
 
         camp()  #Remet à jour les camps en supprimant ceux des persos mort
         energy_restart() #Réinitialise l'energie pour tous les perso qui sont chez eux
-
+        reset_food()
 
         if c > parametre["DURE_JEU"]:
             break
@@ -95,5 +95,4 @@ def game():
     time.sleep(100)
     return
 
-game()
 

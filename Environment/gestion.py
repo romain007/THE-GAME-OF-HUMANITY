@@ -31,3 +31,8 @@ def place_camp():
         if map[(hasard,hasard2)]["objet"] == "grass":
             #Camp sur un endroit aléatoire
             return (hasard,hasard2)
+        
+def reset_food():
+    for i in map:
+        if map[i] in ["player_blue","player_red"]:
+            map[i]["FOOD"] = 0

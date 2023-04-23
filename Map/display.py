@@ -24,18 +24,28 @@ def en_fonction_var(objet):
         return objet["objet"]+"_fertile"
 
 
-def affichage(mort,temps=0,gamma=0.5):
-    
+def affichage(mort,temps=0,gamma=0.5,c=0):
+
+
     pygame.display.set_gamma(gamma)
     font = pygame.font.Font(None, int(parametre["ZOOM"]*2))
+    font2 = pygame.font.Font(None, 40)
 
+    # créer une surface pour le rectangle blanc
+    rect_surface = pygame.Surface((350, 50))
+    rect_surface.fill((255, 255, 255))
+    # créer une surface pour le texte
+    text_surface = font2.render(f'NOMBRE DE JOUR : {c}', True, (0, 0, 0))
+    rect_surface.blit(text_surface,(10,10))
     screen.blit(background_surface, (0, 0))
 
 
     
-
-    for loop in range(FPS+1):   
+    for loop in range(FPS+1):
+        # dessiner le texte sur la surface du rectangle
+   
         screen.blit(background_surface, (0, 0))
+        
 
         for identifiant in campement:
 
@@ -54,7 +64,7 @@ def affichage(mort,temps=0,gamma=0.5):
                     screen.blit(text_surface, (map[position]["MOVE"][loop][0],map[position]["MOVE"][loop][1]-26))  #Barre de vie
 
 
-
+        screen.blit(rect_surface, (largeur,hauteur))
 
         time.sleep(temps)
         pygame.display.flip()
