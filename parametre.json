@@ -1,15 +1,18 @@
 {
-    "POSITION PERSO":
-    {
-        "X":6,
-        "Y":6
-    },  
-    
-    "NOMBRE NOURRITURE":0,
-    "ZOOM":14,
-    "NOMBRE PERSO RED":40,
-    "NOMBRE PERSO BLUE":40,
-    "FPS":10
+   "DURE_JEU": 100,
+   "FPS": 10,
+   "ZOOM": 10,
+   "TIME": 0,
+   "NOMBRE NOURRITURE": 100,
+   "NOMBRE PERSO RED": 400,
+   "NOMBRE PERSO BLUE": 400,
+   "CAILLOUX": 0,
+   "ARBRE": 0,
+   "DAY": 50,
+   "DAY_RETURN_HOME": 10,
+   "ENERGY_MOVE": -1,
+   "ENERGY_FIGHT": -3,
+   "ENERGY_CATCH": -2,
+   "ENERGY_REPRODUCTION": -4,
+   "ENERGY_FOOD": 5
 }
-
-

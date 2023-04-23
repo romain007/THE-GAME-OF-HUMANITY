@@ -1,5 +1,8 @@
 import random
+from math import *
+
 #Sert à récupérer des donnés dans un fichier ou à y écrire, tous ceux qui est data
+#Fait par ANTOINE
 
 def lire(ligne,fichier):
     """ retourne le contenu de la ligne "i" du fichier spécifié, renvoie False si la ligne est vide """
@@ -34,23 +37,26 @@ def diviseurs_communs(nombre1, nombre2):
     diviseurs_communs = list(diviseurs1.intersection(diviseurs2))
     return diviseurs_communs
 
-def création_dico(dico,liste_clé):
-    new = dico.setdefault(liste_clé[0], {})
-    for i in liste_clé[1:]:
-        new = new.setdefault(i, {})
-    return dico
 
 def melange_dico(dictionnaire):
-    cles = list(dictionnaire.keys())
-    valeurs = list(dictionnaire.values())
 
-    random.shuffle(cles)
-    random.shuffle(valeurs)
+    # Création d'une liste contenant les paires clé-valeur du dictionnaire
+    liste_paires = list(dictionnaire.items())
 
-    dictionnaire_melange = {}
+    # Mélange de la liste
+    random.shuffle(liste_paires)
 
-    for i in range(len(cles)):
-        dictionnaire_melange[cles[i]] = valeurs[i]
+    # Création d'un nouveau dictionnaire avec les paires mélangées
+    return dict(liste_paires)
 
-    return dictionnaire_melange
+def signe(entry):
+    if entry >= 0:
+        return 1
+    if entry < 0:
+        return -1
+    
+def distance_euclidienne(depart,arrive):
+    return int(sqrt( (depart[0]-arrive[0])**2 + (depart[1]-arrive[1])**2   ))    
+
+
 
