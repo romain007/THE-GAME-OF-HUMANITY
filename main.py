@@ -48,9 +48,13 @@ options_menu_theme = pygame_menu.Theme(
 # ▶ - Fonction de démarrage du jeu :
 
 def start_game():
-    game()  #FONCTION LANCE LE JEU
+"""> Fonction qui démarre le jeu."""
+    game()
 
 def on_text_entered(text_input):
+"""Entrée: text_input
+Sortie: Null
+> Fonction qui sauvegarde les changements du joueur dans le json quand il a entré un nouveau paramètre."""
     with open("parametre.json","w") as f:
         for i in r:
             r[i] = int(r[i])
@@ -62,9 +66,7 @@ with open("parametre.json","r") as f:
     r = json.load(f)
 
 def show_options():
-
-    # 📄 - Code pour afficher la page d'options :
-
+"""> Crée et affiche le menu options."""
     menu_options = pygame_menu.Menu("Options", MENU_WIDTH, MENU_HEIGHT, theme=options_menu_theme)
     menu_options.add.button("Retour", menu)
     for word in r:
@@ -74,9 +76,8 @@ def show_options():
     
     menu_options.mainloop(pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT)))
 
-# ❎ - Fonction de fermeture de l'application :
-
 def quit_game():
+"""> Ferme le jeu et le programme."""
     pygame.quit()
     sys.exit()
 
