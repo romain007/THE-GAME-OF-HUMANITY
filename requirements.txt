@@ -1,2 +1,4 @@
 pygame
-colorama
+pygame-menu
+matplotlib
+
