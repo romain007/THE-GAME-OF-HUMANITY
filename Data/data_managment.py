@@ -1,11 +1,14 @@
+# 🧱 - Importation des modules :
+
 import random
 from math import *
 
-#Sert à récupérer des donnés dans un fichier ou à y écrire, tous ceux qui est data
-#Fait par ANTOINE
+# ⚙ - Fonctions Utilitaires :
 
 def lire(ligne,fichier):
-    """ retourne le contenu de la ligne "i" du fichier spécifié, renvoie False si la ligne est vide """
+    """Entrée: ligne, fichier
+    Sortie: line_content ou False si la ligne est vide 
+    > Retourne le contenu de la ligne spécifiée ou False si la ligne est vide."""
     
     with open(fichier,'r') as file:
         line_content = file.readlines()[ligne-1]
@@ -14,7 +17,9 @@ def lire(ligne,fichier):
         return line_content
         
 def ecrire(ligne,contenu,fichier):
-    """écrit à la ligne "i" dans le fichier spécifié avec le contenu entré"""
+    """Entrée: ligne, contenu, fichier
+    Sortie: Null
+    > Modifie la ligne spécifiée du fichier spécifié avec le contenu donné."""
     
     with open(fichier,'r') as file:
         file_content = file.readlines()
@@ -24,6 +29,10 @@ def ecrire(ligne,contenu,fichier):
         file.write(file_content)
 
 def diviseurs_communs(nombre1, nombre2):
+    """Entree: nombre1, nombre2
+    Sortie: diviseurs_communs
+    > Retourne les diviseurs communs de deux nombres spécifiés."""
+    
     diviseurs1 = set()
     for i in range(1, nombre1 + 1):
         if nombre1 % i == 0:
@@ -39,7 +48,10 @@ def diviseurs_communs(nombre1, nombre2):
 
 
 def melange_dico(dictionnaire):
-
+    """Entrée: dictionnaire
+    Sortie: dict(liste_paires)
+    > Mélange les paires clé/valeur d'un dictionnaire."""
+    
     # Création d'une liste contenant les paires clé-valeur du dictionnaire
     liste_paires = list(dictionnaire.items())
 
@@ -50,13 +62,19 @@ def melange_dico(dictionnaire):
     return dict(liste_paires)
 
 def signe(entry):
+    """Entrée: entry
+    Sortie: 1/-1
+    > Retourne 1 si le nombre est positif et -1 si le nombre et négatif"""
     if entry >= 0:
         return 1
     if entry < 0:
         return -1
     
 def distance_euclidienne(depart,arrive):
-    return int(sqrt( (depart[0]-arrive[0])**2 + (depart[1]-arrive[1])**2   ))    
+    """Entrée: depart,arrive
+    Sortie: int(sqrt((depart[0]-arrive[0])**2 + (depart[1]-arrive[1])**2))
+    > Retourne la distance euclidienne entre deux points."""
+    return int(sqrt((depart[0]-arrive[0])**2 + (depart[1]-arrive[1])**2))    
 
 
 
