@@ -3,26 +3,28 @@ import matplotlib.pyplot as plt
 
 def update_log():
     statistique = {"speed":[],"power":[],"agility":[],"fertilite":[],"nb_perso":0,"nourriture_mange":[],"color_red":0,"color_blue":0}
+    try:
+        for i in map:
+            if map[i]["objet"] in ["player_red","player_blue"]:
+                statistique["speed"].append(map[i]["SPEED"])
+                statistique["power"].append(map[i]["POWER"])
+                statistique["agility"].append(map[i]["AGILITY"])
+                statistique["fertilite"].append(map[i]["FERTILITE"])
+                statistique["nourriture_mange"].append(map[i]["FOOD"])
+                statistique["nb_perso"] = statistique["nb_perso"] + 1
+                if map[i]["objet"] == "player_red":
+                    statistique["color_red"] = statistique["color_red"] + 1
+                if map[i]["objet"] == "player_blue":
+                    statistique["color_blue"] = statistique["color_blue"] + 1
+        statistique["speed"] = sum(statistique["speed"])/len(statistique["speed"])      
+        statistique["power"] = sum(statistique["power"])/len(statistique["power"])   
+        statistique["agility"] = sum(statistique["agility"])/len(statistique["agility"])   
+        statistique["fertilite"] = sum(statistique["fertilite"])/len(statistique["fertilite"])   
+        statistique["nourriture_mange"] = sum(statistique["nourriture_mange"])/len(statistique["nourriture_mange"])   
 
-    for i in map:
-        if map[i]["objet"] in ["player_red","player_blue"]:
-            statistique["speed"].append(map[i]["SPEED"])
-            statistique["power"].append(map[i]["POWER"])
-            statistique["agility"].append(map[i]["AGILITY"])
-            statistique["fertilite"].append(map[i]["FERTILITE"])
-            statistique["nourriture_mange"].append(map[i]["FOOD"])
-            statistique["nb_perso"] = statistique["nb_perso"] + 1
-            if map[i]["objet"] == "player_red":
-                statistique["color_red"] = statistique["color_red"] + 1
-            if map[i]["objet"] == "player_blue":
-                statistique["color_blue"] = statistique["color_blue"] + 1
-    statistique["speed"] = sum(statistique["speed"])/len(statistique["speed"])      
-    statistique["power"] = sum(statistique["power"])/len(statistique["power"])   
-    statistique["agility"] = sum(statistique["agility"])/len(statistique["agility"])   
-    statistique["fertilite"] = sum(statistique["fertilite"])/len(statistique["fertilite"])   
-    statistique["nourriture_mange"] = sum(statistique["nourriture_mange"])/len(statistique["nourriture_mange"])   
-
-    stat.append(statistique)
+        stat.append(statistique)
+    except:
+        pass
 
 def affiche_log():
 

@@ -129,15 +129,15 @@ for groupe in groupes_arbres:
           background_surface.blit(image["tree"],(pos[0]*ecart,pos[1]*ecart))
           loop = loop + 1
 
-def generate_poulet():
+def generate_poulet(x):
   #Géneration de la nourriture à des endroits aléatoire
   loop=0
-  while loop < parametre["NOMBRE NOURRITURE"]:
+  while loop < x:
     hasard  = random.randint(0,largeur-1)
     hasard2 = random.randint(0,hauteur-1)
     if map[(hasard,hasard2)]["objet"] == "grass" :
       map[(hasard,hasard2)]["objet"] = "food"
-      map[(hasard,hasard2)]["IDENTIFIANT"] = f"food{loop}"
+      map[(hasard,hasard2)]["IDENTIFIANT"] = f"food{random.randint(0,10000000000000)}"
       map[(hasard,hasard2)]["SPEED"] = 50
       map[(hasard,hasard2)]["AGILITY"] = 0
       map[(hasard,hasard2)]["VECTOR"] = 0
@@ -163,7 +163,8 @@ while loop < parametre["NOMBRE PERSO BLUE"]:
     map[(hasard,hasard2)]["MOVE"] = []
     map[(hasard,hasard2)]["CAMP"] = (hasard,hasard2)
     map[(hasard,hasard2)]["REPRODUCTION"] = []
-    campement[f"player_blue{loop}"] = {"position":(hasard,hasard2),"objet":"player_blue","baby":False}
+    #map[(hasard,hasard2)]["BABY"] = []
+    campement[f"player_blue{loop}"] = {"position":(hasard,hasard2),"objet":"player_blue","baby":False,"active":True,"parent":"player_red"}
     loop=loop+1
 
 #Génération des persos rouges
@@ -184,7 +185,8 @@ while loop < parametre["NOMBRE PERSO RED"]:
     map[(hasard,hasard2)]["MOVE"] = []
     map[(hasard,hasard2)]["CAMP"] = (hasard,hasard2)
     map[(hasard,hasard2)]["REPRODUCTION"] = []
-    campement[f"player_red{loop}"] = {"position":(hasard,hasard2),"objet":"player_red","baby":False}
+    #map[(hasard,hasard2)]["BABY"] = []
+    campement[f"player_red{loop}"] = {"position":(hasard,hasard2),"objet":"player_red","baby":False,"active":True,"parent":"player_red"}
     loop=loop+1
 
-solid = ["rock","tree","blue_tent","red_tent"]
+solid = ["rock","tree"]

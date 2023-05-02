@@ -20,7 +20,7 @@ TEXT_COLOR = (24,20,37)
 FONT_SIZE = 32
 FONT = pygame_menu.font.FONT_NEVIS
 
- 
+
 # 🎨 - Creation des Themes :
 
 main_menu_theme = pygame_menu.Theme(

@@ -33,6 +33,8 @@ def move(identifiant):
         #Perso est mort
         return False
     
+    map[old_position]["ENERGY"] = map[old_position]["ENERGY"] + parametre["ENERGY_LIFE"]
+
     if map[old_position]["objet"] == "player_red":
         attaque = "player_blue"
 
@@ -67,24 +69,22 @@ def move(identifiant):
         new_pos = random.choice(liste_pos)        
 
 
-        map[old_position]["ENERGY"] = map[old_position]["ENERGY"] + parametre["ENERGY_FIGHT"]
-
+        rand_num = random.randint(0,100)
         #L'attaquant est plus fort que que l'autre
-        if map[old_position]["POWER"] > map[new_pos]["POWER"]:
+        if map[old_position]["POWER"] > rand_num:
 
-            #L'attaqué prend la fuite
-            rand_num = random.randint(0,100)
-            if int(map[old_position]["SPEED"]/2) < rand_num: 
+           
+            #Attaque
 
-                new_pos = old_position
-                fuite_perso(map[new_pos]["IDENTIFIANT"])
-            #Prend pas la fuite
-            else:
-
-                mort = {new_pos:map[new_pos]["objet"]}
-        #Moins fort que l'autre
+            map[old_position]["ENERGY"] = map[old_position]["ENERGY"] + parametre["ENERGY_FIGHT"]
+            mort = {new_pos:map[new_pos]["objet"]}
+            
+        #Prend la fuite
         else:
+            #L'attaqué prend la fuite
 
+            new_pos = old_position
+            fuite_perso(map[new_pos]["IDENTIFIANT"])
             new_pos = old_position
         
         mise_a_jour(old_position,new_pos)
@@ -98,16 +98,19 @@ def move(identifiant):
         
         new_pos = random.choice(liste_pos)
         rand_num = random.randint(0,100)
-        #Si le poulet arrive à s'enfuir
         
-        if map[old_position]["AGILITY"] < rand_num:
-            fuite_perso(map[new_pos]["IDENTIFIANT"])
-            map[old_position]["ENERGY"] =   map[old_position]["ENERGY"] + parametre["ENERGY_CATCH"]
-
-        else:
+        #Tue le poulet
+        
+        if map[old_position]["AGILITY"] > rand_num:
             mort = {new_pos:map[new_pos]["objet"]}
             map[old_position]["ENERGY"] =   map[old_position]["ENERGY"] + parametre["ENERGY_FOOD"]
             map[old_position]["FOOD"] =   map[old_position]["FOOD"] + 1
+            
+            #map[old_position]["ENERGY"] =   map[old_position]["ENERGY"] + parametre["ENERGY_CATCH"]
+        
+        #Il arrive a s'enfuir
+        else:
+            fuite_perso(map[new_pos]["IDENTIFIANT"])
 
         mise_a_jour(old_position,new_pos)
         return mort
@@ -117,8 +120,10 @@ def move(identifiant):
     elif response_repr :
         new_pos = random.choice(liste_repr)
         rand_num = random.randint(0,100)
+        #Se reproduisent si assez fertile
         #Permet de faire en sorte que 2 persos ne se reproduisent plus ensemble
-        if map[new_pos]["IDENTIFIANT"] not in map[old_position]["REPRODUCTION"] and map[old_position]["FERTILITE"] < rand_num and map[old_position]["FOOD"] > 1:
+        if map[new_pos]["IDENTIFIANT"] not in map[old_position]["REPRODUCTION"] and map[old_position]["FERTILITE"] > rand_num:
+
             map[new_pos]["ENERGY"] = map[new_pos]["ENERGY"] + parametre["ENERGY_REPRODUCTION"]
             map[old_position]["ENERGY"] = map[new_pos]["ENERGY"] + parametre["ENERGY_REPRODUCTION"]
 
@@ -131,55 +136,61 @@ def move(identifiant):
 
             #Mutation génétiquemutation génétique aléatoire avec distribution gaussienne
             vitesse_enfant = (0.5 * map[old_position]["SPEED"]) + (0.5 * map[new_pos]["SPEED"])
-            variance = 0.2 * vitesse_enfant
+            variance = 0.1 * vitesse_enfant
             mutation = random.gauss(0, variance)
             vitesse_enfant += mutation
 
             force_enfant = (0.5 * map[old_position]["POWER"]) + (0.5 * map[new_pos]["POWER"])
-            variance = 0.2 * force_enfant
+            variance = 0.1 * force_enfant
             mutation = random.gauss(0, variance)
             force_enfant += mutation
 
             agilité_enfant = (0.5 * map[old_position]["AGILITY"]) + (0.5 * map[new_pos]["AGILITY"])
-            variance = 0.2 * agilité_enfant
+            variance = 0.1 * agilité_enfant
             mutation = random.gauss(0, variance)
             agilité_enfant += mutation
 
             fertilité_enfant = (0.5 * map[old_position]["FERTILITE"]) + (0.5 * map[new_pos]["FERTILITE"])
-            variance = 0.2 * fertilité_enfant
+            variance = 0.1 * fertilité_enfant
             mutation = random.gauss(0, variance)
             fertilité_enfant += mutation
 
             vitesse_enfant = (0.5 * map[old_position]["SPEED"]) + (0.5 * map[new_pos]["SPEED"])
-            variance = 0.2 * vitesse_enfant
+            variance = 0.1 * vitesse_enfant
             mutation = random.gauss(0, variance)
             vitesse_enfant += mutation      
 
-            var = random.random()
+            id_enfant = random.randint(0,100000000000000000000000000)
 
-            #Prend une position de tente a coté de celle du parent en excluant
-            position_campement = place_camp()
+            #Prend une position de tente a l'endroit ou il a été crée
+            position_campement = hasard_camp()
 
+            
             #Création d'un nouveau campement pour l'enfant ainsi qu'un personnage    
-            campement[f"{map[old_position]['objet']}{id(var)}"] = {"position":position_campement,
+            campement[f"{map[old_position]['objet']}{id_enfant}"] = {"position":position_campement,
                                                                         "objet":map[old_position]["objet"],
+                                                                        "active":False,
+                                                                        "parent": map[old_position]["IDENTIFIANT"],
                                                                         "baby":
                                                                                 {"objet":map[old_position]["objet"],
-                                                                                "IDENTIFIANT":f"{map[old_position]['objet']}{id(var)}",
+                                                                                "IDENTIFIANT":f"{map[old_position]['objet']}{id_enfant}",
                                                                                 "SPEED":vitesse_enfant,
                                                                                 "POWER":force_enfant,
                                                                                 "AGILITY":agilité_enfant,
                                                                                 "FERTILITE":fertilité_enfant,
-                                                                                "FOOD":0,
+                                                                                "FOOD":1,
                                                                                 "ENERGY":100,
                                                                                 "MOVE":val_inter(position_campement,position_campement),
                                                                                 "CAMP":position_campement,
                                                                                 "REPRODUCTION": [map[old_position]["IDENTIFIANT"],map[new_pos]["IDENTIFIANT"]]
                                                                             }}
-            
-            #Fais en sorte que les parents ne se reproduisent pas avec l'enfant AAAAAAA
-            map[old_position]["REPRODUCTION"].append(f"{map[old_position]['objet']}{id(var)}")
-            map[new_pos]["REPRODUCTION"].append(f"{map[old_position]['objet']}{id(var)}")
+            #Caracteristique de l'enfant
+
+            #Fais en sorte que les parents ne se reproduisent pas avec l'enfant 
+
+            #map[old_position]["BABY"].append(data)
+            map[old_position]["REPRODUCTION"].append(f"{map[old_position]['objet']}{id_enfant}")
+            map[new_pos]["REPRODUCTION"].append(f"{map[old_position]['objet']}{id_enfant}")
 
             new_pos = old_position
             mise_a_jour(old_position,new_pos)
@@ -228,24 +239,36 @@ def move_pouleto(identifiant):
 
     #Prend une position au hasard
     new_pos = random.choice(liste_pos)    
+    rand_num = random.randint(0,100)
+    if map[old_position]["SPEED"] < rand_num:
+        new_pos = old_position
     mise_a_jour(old_position,new_pos)
     return mort
 
 def energy_compteur():
     mort = []
+    #Remet l'énergie à 100
     for pos in map:
-        if map[pos]["objet"] in ["player_red","player_blue"] and map[pos]["ENERGY"] > 100:
+        if map[pos]["objet"] in ["player_red","player_blue"] and map[pos]["ENERGY"] > 1000:
             map[pos]["ENERGY"] = 100
-
+        #Tue ceux qui en ont moins de 0
         if map[pos]["objet"] in ["player_red","player_blue"] and map[pos]["ENERGY"] < 0:
             mort.append({pos:map[pos]["objet"]})
             map[pos] = {"objet":"grass","IDENTIFIANT":"grass"+str(id(map[pos]))}
     return mort
 
-def energy_restart(val=100):
+def restart(val=100):
+    # Remet à 100 l'energie des persos qui sont rentrés
     for pos in map:
         if map[pos]["objet"] in ["player_red","player_blue"] and pos == map[pos]["CAMP"]:
             map[pos]["ENERGY"] = val
+    #Les persos qui n'ont pas mangé au moins 1 poulet ne survivent pas
+    """for pos in map:
+        if map[pos]["objet"] in ["player_red","player_blue"]:
+            if map[pos]["FOOD"] == 0:
+                map[pos] = {"objet":"grass","IDENTIFIANT":"grass"+str(id(map[pos]))}
+            else:
+                map[pos]["FOOD"] = 0"""
 
 def mise_a_jour(old_position,new_pos):
     #Mouvement entre 2 position (sert à l'animation)

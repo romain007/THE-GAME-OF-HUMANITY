@@ -48,8 +48,10 @@ def affichage(mort,temps=0,gamma=0.5,c=0):
         
 
         for identifiant in campement:
+            #Affiche l'objet campement que si il est bien actif (un enfant est née dedans)
+            if campement[identifiant]["active"]:
 
-            screen.blit(image2[campement[identifiant]["objet"]],(campement[identifiant]["position"][0]*ecart,campement[identifiant]["position"][1]*ecart))  #Maison perso
+                screen.blit(image2[campement[identifiant]["objet"]],(campement[identifiant]["position"][0]*ecart,campement[identifiant]["position"][1]*ecart))  #Maison perso
 
         for i in mort:
             for key,value in i.items():
@@ -60,7 +62,7 @@ def affichage(mort,temps=0,gamma=0.5,c=0):
                 try:
                     screen.blit(image[en_fonction_var(map[position])],map[position]["MOVE"][loop])  #Perso
                     if map[position]["objet"] not in ["food"]:
-                        text_surface = font.render(f"{map[position]['ENERGY']}/100", True, (255 , 255 ,255))
+                        text_surface = font.render(f"{round(map[position]['ENERGY'])}/100", True, (255 , 255 ,255))
                         screen.blit(text_surface, (map[position]["MOVE"][loop][0],map[position]["MOVE"][loop][1]-26))  #Barre de vie
                 except:
                     pass
