@@ -8,7 +8,8 @@ import time
 
 
 def fuite_perso(identifiant):
-    old_position = [key for key, value in map.items() if value['IDENTIFIANT'] == identifiant][0]
+    """Le personnage s'enfuit dans une direction aléatoire. Prend en entré l'identifiant du personnage"""
+    old_position = [key for key, value in map.items() if value['IDENTIFIANT'] == identifiant][0]  #Trouve position à partir de l'identifiant
     liste_pos = next_to(old_position)
     response,liste_pos = filtre(liste_pos.copy(),param=solid+["food","player_blue","player_red"])
 
@@ -16,14 +17,18 @@ def fuite_perso(identifiant):
     if not response:
         return False
     
+    #Prend une nouvelle position aléatoire dans la liste de case disponible
     new_pos = random.choice(liste_pos)
-    val = val_inter(old_position,new_pos)
-    map[new_pos] = map[old_position].copy()
+    val = val_inter(old_position,new_pos)   #Pour animation
+    
+    #On fait bouger perso
+    map[new_pos] = map[old_position].copy()    #On assigne a la clé (position) une nouvelle valeur (celle du personnage)
     map[new_pos]["MOVE"] = val
-    map[old_position] = {"objet":"grass","IDENTIFIANT":"grass"+str(id(map[old_position]))}
+    map[old_position] = {"objet":"grass","IDENTIFIANT":"grass"+str(id(map[old_position]))}  #Met de l'herber à la place de l'ancienne position
 
 
 def move(identifiant):
+    """Cette fonction bouge un personnage à partir de son identifiant"""
     mort = False
 
     #Position actuelle de l'identifiant du perso
