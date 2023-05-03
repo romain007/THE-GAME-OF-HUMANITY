@@ -38,8 +38,9 @@ def move(identifiant):
         #Perso est mort
         return False
     
-    map[old_position]["ENERGY"] = map[old_position]["ENERGY"] + parametre["ENERGY_LIFE"]
+    map[old_position]["ENERGY"] = map[old_position]["ENERGY"] + parametre["ENERGY_LIFE"] #Chaque tour, le perso perd de l'énergie meme sans rien faire
 
+    #Définis l'attaque cible de chaque couleur
     if map[old_position]["objet"] == "player_red":
         attaque = "player_blue"
 
@@ -49,7 +50,7 @@ def move(identifiant):
     #Liste des cases disponibles
     liste_pos = next_to(old_position)
 
-    #Enleve les rochers et arbres
+    #Enleve les objets solides
     response,liste_pos = filtre(liste_pos,param=solid)
 
 
@@ -60,7 +61,8 @@ def move(identifiant):
     #Prend une position au hasard
     new_pos = random.choice(liste_pos)   
 
-
+    #Si une variable response est True, cela veut dire qu'il y a au moins une des cases cibles dans les cases disponible
+    #Permet de filtrer les objets
     response_attaque,liste_attaque = filtre_cible(liste_pos.copy(),param=[attaque])
     response_food,liste_food = filtre_cible(liste_pos.copy(),param=["food"])
     response_repr,liste_repr = filtre_cible(liste_pos.copy(),param=[map[old_position]["objet"]])
@@ -80,7 +82,6 @@ def move(identifiant):
 
            
             #Attaque
-
             map[old_position]["ENERGY"] = map[old_position]["ENERGY"] + parametre["ENERGY_FIGHT"]
             mort = {new_pos:map[new_pos]["objet"]}
             
@@ -96,7 +97,7 @@ def move(identifiant):
         return mort
     
 
-
+    #AGILITY
     #Si il y a un poulet a coté de lui, il l'attaque
     elif response_food:
         liste_pos = liste_food
@@ -105,14 +106,11 @@ def move(identifiant):
         rand_num = random.randint(0,100)
         
         #Tue le poulet
-        
         if map[old_position]["AGILITY"] > rand_num:
             mort = {new_pos:map[new_pos]["objet"]}
             map[old_position]["ENERGY"] =   map[old_position]["ENERGY"] + parametre["ENERGY_FOOD"]
             map[old_position]["FOOD"] =   map[old_position]["FOOD"] + 1
-            
-            #map[old_position]["ENERGY"] =   map[old_position]["ENERGY"] + parametre["ENERGY_CATCH"]
-        
+                   
         #Il arrive a s'enfuir
         else:
             fuite_perso(map[new_pos]["IDENTIFIANT"])
@@ -126,20 +124,16 @@ def move(identifiant):
         new_pos = random.choice(liste_repr)
         rand_num = random.randint(0,100)
         #Se reproduisent si assez fertile
-        #Permet de faire en sorte que 2 persos ne se reproduisent plus ensemble
         if map[new_pos]["IDENTIFIANT"] not in map[old_position]["REPRODUCTION"] and map[old_position]["FERTILITE"] > rand_num:
 
             map[new_pos]["ENERGY"] = map[new_pos]["ENERGY"] + parametre["ENERGY_REPRODUCTION"]
-            map[old_position]["ENERGY"] = map[new_pos]["ENERGY"] + parametre["ENERGY_REPRODUCTION"]
-
-            #FONT UN ENFANT
-            rand_num = random.randint(1,2)
+            map[old_position]["ENERGY"] = map[new_pos]["ENERGY"] + parametre["ENERGY_REPRODUCTION"] #Met à jour l'énergie
 
             #Permet de faire en sorte que 2 persos ne se reproduisent plus ensemble
             map[old_position]["REPRODUCTION"].append(map[new_pos]["IDENTIFIANT"])
             map[new_pos]["REPRODUCTION"].append(map[old_position]["IDENTIFIANT"])
 
-            #Mutation génétiquemutation génétique aléatoire avec distribution gaussienne
+            #Mutation génétique aléatoire avec distribution gaussienne
             vitesse_enfant = (0.5 * map[old_position]["SPEED"]) + (0.5 * map[new_pos]["SPEED"])
             variance = 0.1 * vitesse_enfant
             mutation = random.gauss(0, variance)
@@ -171,7 +165,7 @@ def move(identifiant):
             position_campement = hasard_camp()
 
             
-            #Création d'un nouveau campement pour l'enfant ainsi qu'un personnage    
+            #Création d'un nouveau campement qui comprend les caractèristiques du futur enfant    
             campement[f"{map[old_position]['objet']}{id_enfant}"] = {"position":position_campement,
                                                                         "objet":map[old_position]["objet"],
                                                                         "active":False,
@@ -189,11 +183,9 @@ def move(identifiant):
                                                                                 "CAMP":position_campement,
                                                                                 "REPRODUCTION": [map[old_position]["IDENTIFIANT"],map[new_pos]["IDENTIFIANT"]]
                                                                             }}
-            #Caracteristique de l'enfant
 
             #Fais en sorte que les parents ne se reproduisent pas avec l'enfant 
-
-            #map[old_position]["BABY"].append(data)
+            
             map[old_position]["REPRODUCTION"].append(f"{map[old_position]['objet']}{id_enfant}")
             map[new_pos]["REPRODUCTION"].append(f"{map[old_position]['objet']}{id_enfant}")
 
@@ -225,6 +217,7 @@ def move(identifiant):
     return mort
 
 def move_pouleto(identifiant):
+    """Permet de bouger un poulet à partir de son identifiant"""
     mort = False
 
     #Position actuelle de l'identifiant du perso
@@ -247,15 +240,16 @@ def move_pouleto(identifiant):
     rand_num = random.randint(0,100)
     if map[old_position]["SPEED"] < rand_num:
         new_pos = old_position
-    mise_a_jour(old_position,new_pos)
+    mise_a_jour(old_position,new_pos)  #Met à jour la position
     return mort
 
 def energy_compteur():
     mort = []
-    #Remet l'énergie à 100
+    #Remet les personnages qui ont une energie au dessus de celle définis à celle définis
     for pos in map:
         if map[pos]["objet"] in ["player_red","player_blue"] and map[pos]["ENERGY"] > 1000:
             map[pos]["ENERGY"] = 100
+            
         #Tue ceux qui en ont moins de 0
         if map[pos]["objet"] in ["player_red","player_blue"] and map[pos]["ENERGY"] < 0:
             mort.append({pos:map[pos]["objet"]})
@@ -267,7 +261,7 @@ def restart(val=100):
     for pos in map:
         if map[pos]["objet"] in ["player_red","player_blue"] and pos == map[pos]["CAMP"]:
             map[pos]["ENERGY"] = val
-    #Les persos qui n'ont pas mangé au moins 1 poulet ne survivent pas
+    #Les persos qui n'ont pas mangé au moins 1 poulet ne survivent pas. Cette option n'est pas fonctionnel car cela rend la simulation beaucoup moins bien
     """for pos in map:
         if map[pos]["objet"] in ["player_red","player_blue"]:
             if map[pos]["FOOD"] == 0:
