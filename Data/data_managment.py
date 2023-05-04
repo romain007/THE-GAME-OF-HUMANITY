@@ -5,7 +5,7 @@ from math import *
 #Fait par ANTOINE
 
 def diviseurs_communs(nombre1, nombre2):
-    """Retourne les diviseurs communs entre 2 nombres. En entré les 2 nombres et en sortie une liste de diviseur commun""")
+    """Retourne les diviseurs communs entre 2 nombres. En entré les 2 nombres et en sortie une liste de diviseur commun"""
     diviseurs1 = set()
     for i in range(1, nombre1 + 1):
         if nombre1 % i == 0:
