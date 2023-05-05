@@ -1,6 +1,8 @@
 from Map.generation import *
 from Environment.case_occupe import *
 
+#Ce module est remplie de fonction annexe, servant à la gestion de l'énergie, des camps, ect...
+
 def kill(perso):
     """Tue tous les perso définis en entrée"""
     for position in map:
