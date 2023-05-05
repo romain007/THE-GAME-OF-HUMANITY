@@ -145,7 +145,7 @@ def generate_poulet(x):
       map[(hasard,hasard2)]["ENERGY"] = 100000000
       loop=loop+1
 
-#Génération des persos bleus
+#Génération des persos bleus ainsi que de toutes leurs variables
 loop=0
 while loop < parametre["NOMBRE PERSO BLUE"]:
   #Pour un suivis de chaque personnage, ils ont chacun un identifiant unique
@@ -167,7 +167,7 @@ while loop < parametre["NOMBRE PERSO BLUE"]:
     campement[f"player_blue{loop}"] = {"position":(hasard,hasard2),"objet":"player_blue","baby":False,"active":True,"parent":"player_red"}
     loop=loop+1
 
-#Génération des persos rouges
+#Génération des persos rouges ainsi que de toutes leurs variables
 loop=0
 while loop < parametre["NOMBRE PERSO RED"]:
   #Pour un suivis de chaque personnage, ils ont chacun un identifiant unique
