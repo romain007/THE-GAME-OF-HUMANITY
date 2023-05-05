@@ -5,7 +5,7 @@ from Environment.gestion import *
 import random
 import time
 
-
+#Ce module sert uniquement au déplacement vectorielle des personnages, rouge, bleu ou poulet. C'est le code principal et le plus important de ce programme.
 
 def fuite_perso(identifiant):
     """Le personnage s'enfuit dans une direction aléatoire. Prend en entré l'identifiant du personnage"""
@@ -243,33 +243,9 @@ def move_pouleto(identifiant):
     mise_a_jour(old_position,new_pos)  #Met à jour la position
     return mort
 
-def energy_compteur():
-    mort = []
-    #Remet les personnages qui ont une energie au dessus de celle définis à celle définis
-    for pos in map:
-        if map[pos]["objet"] in ["player_red","player_blue"] and map[pos]["ENERGY"] > 1000:
-            map[pos]["ENERGY"] = 100
-            
-        #Tue ceux qui en ont moins de 0
-        if map[pos]["objet"] in ["player_red","player_blue"] and map[pos]["ENERGY"] < 0:
-            mort.append({pos:map[pos]["objet"]})
-            map[pos] = {"objet":"grass","IDENTIFIANT":"grass"+str(id(map[pos]))}
-    return mort
-
-def restart(val=100):
-    # Remet à 100 l'energie des persos qui sont rentrés
-    for pos in map:
-        if map[pos]["objet"] in ["player_red","player_blue"] and pos == map[pos]["CAMP"]:
-            map[pos]["ENERGY"] = val
-    #Les persos qui n'ont pas mangé au moins 1 poulet ne survivent pas. Cette option n'est pas fonctionnel car cela rend la simulation beaucoup moins bien
-    """for pos in map:
-        if map[pos]["objet"] in ["player_red","player_blue"]:
-            if map[pos]["FOOD"] == 0:
-                map[pos] = {"objet":"grass","IDENTIFIANT":"grass"+str(id(map[pos]))}
-            else:
-                map[pos]["FOOD"] = 0"""
 
 def mise_a_jour(old_position,new_pos):
+    
     #Mouvement entre 2 position (sert à l'animation)
     val = val_inter(old_position,new_pos)
 
