@@ -3,6 +3,8 @@ from Environment.case_occupe import *
 from Map.display import *
 import time
 
+#Ce module est composé des fonctions qui concernent la période de la nuit, quand les personnages rentrent chez eux
+
 def rapprochement(depart,arrive):
     """Avec une position de départ, donne la prochaine case la plus proche"""
     if depart == arrive:
@@ -23,7 +25,7 @@ def rapprochement(depart,arrive):
 
 
 def return_home(identifiant):
-
+    """Fais bouger un personnage à partir de son identifiant vers la case la plus proche de sa maison"""
 
     #Position actuelle de l'identifiant du perso
 
