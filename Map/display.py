@@ -6,6 +6,7 @@ import sys
 
 #Fait par ROMAIN
 #Ce module sert uniquement à l'affichage, il n'apporte rien au jeu mais se contente de l'afficher avec pygame
+
 screen = pygame.display.set_mode((info_w, info_h))
 
 def en_fonction_var(objet):
