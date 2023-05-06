@@ -164,7 +164,7 @@ while loop < parametre["NOMBRE PERSO BLUE"]:
     map[(hasard,hasard2)]["CAMP"] = (hasard,hasard2)
     map[(hasard,hasard2)]["REPRODUCTION"] = []
     #map[(hasard,hasard2)]["BABY"] = []
-    campement[f"player_blue{loop}"] = {"position":(hasard,hasard2),"objet":"player_blue","baby":False,"active":True,"parent":"player_red"}
+    campement[f"player_blue{loop}"] = {"position":(hasard,hasard2),"objet":"player_blue","baby":False,"active":True,"parent":"player_blue"}
     loop=loop+1
 
 #Génération des persos rouges ainsi que de toutes leurs variables
