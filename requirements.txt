@@ -1,4 +1,0 @@
-pygame
-pygame-menu
-matplotlib
-
