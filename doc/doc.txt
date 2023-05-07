@@ -1,0 +1,52 @@
+guide d’utilisation :
+
+-Installer avec pip dans le cmd les bibliothèques se trouvant dans requirements.txt
+-Lancer le fichier ‘main.py’
+→ Un menu s’ouvre avec l’option ‘quitter’, ‘jouer’ et ‘option’.
+
+Documentation (paramètres quand on clique sur option) : 
+
+"DAY": 50 :
+Ce paramètre définis le nombre de tours qu’il y a dans 1 jours. Un nombre trop petit ne génère pas de simulation intéressante car les personnages n’ont pas le temps d’explorer la map.
+
+"DURE_JEU": X :
+Ce paramètre définis le nombre de jours avant que la simulation se finissent. Chacun qu’un jour égale à "DAY", ils faut donc multiplier DURE_JEU * DAY
+pour avoir le nombre de tour totaux. Il est recommandé de ne pas mettre un nombre trop faible car cela ne donnerait pas des résultats très significatif.
+
+
+"FPS": 10
+Ce paramètre définis le nombre d’image entre chaque deplacement de case d’un personnage (FPS = 50 → 50 images entre 2 cases). Plus le FPS est grand, plus la simulation est fluide et « joli » à voir.Il est par défaut à 10 et il est recommandé de le baisser pour avoir une simulation qui tourne plus vite (mois de calcul).
+
+
+"ZOOM": 13
+Ce paramètre définis la taille de la map et donc le zoom.Il est différent pour chaque résolution d’écran car il est calculé à partir de celle ci. Par exemple, un écran d’une grande qualité va pouvoir avoir plus de niveaux de zoom différents. Si le zoom est trop élevés pour la résolution de l’ordinateur, une erreur est déclaré et le programme cesse de fonctionner. (L’erreur a lieu dans la fonction "diviseur_commun" situé dans le fichier data_managment. Attention ! Ne pas mettre le zoom à moins de 5 car vous ne verrez rien et votre ordinateur ne pourra supporter autant de calculs
+
+
+"TIME": 5
+Ce paramètre définis la vitesse de la simulation. Il faut diviser ce chiffre par 10 pour obtenir le temps entre chaque image affiché. Ne pas hésitez à le mettre à 0 pour faire une simulation très rapide
+
+"NOMBRE NOURRITURE": 30
+Ce paramètre définis le nombre de poulet qui seront générés.
+
+"NOMBRE PERSO RED": 40
+Ce paramètre définis le nombre de persos rouges qui seront générés.
+
+"NOMBRE PERSO BLUE": 40,
+Ce paramètre définis le nombre de persos bleus qui seront générés.
+
+"CAILLOUX": 50
+Ce paramètre définis le nombre de cailloux qui seront générés.
+
+"ARBRE": 50
+Ce paramètre définis le nombre d’arbres qui seront générés.
+
+"ENERGY_MOVE": -2
+"ENERGY_FIGHT": -3,
+"ENERGY_CATCH": -2,
+"ENERGY_REPRODUCTION": -4,
+"ENERGY_FOOD": 5
+
+Ne pas changer les paramètres suivant a moins que vous ayez une idée précise de comment ils marchent. Ils définissent le nombre d’énergie gagnés ou perdu en fonction de chaque action et ont été testé à l’avance pour générés la meilleur simulation possible
+
+IMPORTANT :
+Pour que les paramètres souhaitez soit enregister, il faut appuyez sur Entré une fois qu'on a écrit le nombre souhaité dans le input text du menu.
