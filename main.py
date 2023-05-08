@@ -81,7 +81,7 @@ while c < parametre["DURE_JEU"]:
         
         affichage(mort=[],temps=TIME,gamma=gamma_,c=c)
         z = z + 1
-        if z > 100:
+        if z > 40:
             break
         #Ajoute au compteur et compare entre le nombre de perso sur leur maison et le nombre de perso totale
         compteur = 0
