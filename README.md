@@ -25,4 +25,5 @@ Erreur possible :
 Attention, selon votre résolution d'écran il faudra faire varier les paramètres zoom ainsi que le nombre d'entité générés.
 
 -Si quand vous cliquez sur 'jouer' le jeu se ferme, cela veut dire que votre zoom est trop élevé, il faut le baisser
+
 -Si quand vous cliquez sur 'jouer' le programme charge à l'infinis, cela veut dire que vous avez générés trop d'entité pour la taille de votre map, il faut baisser les valeurs de "NOMBRE PERSO RED", "NOMBRE PERSO BLUE" ect
