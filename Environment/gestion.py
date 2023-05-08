@@ -56,10 +56,10 @@ def restart(val=100):
 def energy_compteur():
     """> Tue tous les personnages qui ont 0 ou moins d'énergie et retourne les personnages qui sont mort (à cause de ça)."""
     mort = []
-            
-    if map[pos]["objet"] in ["player_red","player_blue"] and map[pos]["ENERGY"] < 0:
-        mort.append({pos:map[pos]["objet"]})
-        map[pos] = {"objet":"grass","IDENTIFIANT":"grass"+str(id(map[pos]))}
+    for pos in map:   
+        if map[pos]["objet"] in ["player_red","player_blue"] and map[pos]["ENERGY"] < 0:
+            mort.append({pos:map[pos]["objet"]})
+            map[pos] = {"objet":"grass","IDENTIFIANT":"grass"+str(id(map[pos]))}
     return mort
 
 
